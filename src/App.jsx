@@ -39,6 +39,7 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/recipes/recipe"
               element={

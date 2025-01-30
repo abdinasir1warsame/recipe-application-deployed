@@ -13,7 +13,9 @@ export default function TopNav() {
           <div className="rounded-full w-7 h-7 flex items-center justify-center">
             <img src="https://img.icons8.com/color/50/000000/food.png" alt="" />
           </div>
-          <h1 className="text-lg font-bold">Flavor Layer</h1>
+          <Link to={'/'} className="text-lg font-bold">
+            Flavor Layer
+          </Link>
         </div>
 
         {/* Profile */}

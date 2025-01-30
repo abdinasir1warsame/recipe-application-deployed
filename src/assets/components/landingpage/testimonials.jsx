@@ -30,8 +30,7 @@ const Testimonial = () => {
                 <p className="text-lg sm:text-xl lg:text-lg sm:text-xl lg:text-2xl font-medium text-gray-900 dark:text-white">
                   The AI recipe generation is a game-changer. I simply input the
                   ingredients I had on hand, and it created a delicious meal I
-                  would never have thought of myself. Highly recommended for
-                  anyone who loves to cook or experiment with food!"
+                  would never have thought of myself.
                 </p>
               </blockquote>
               <figcaption className="flex items-center justify-center mt-6 space-x-3">
@@ -72,10 +71,7 @@ const Testimonial = () => {
                 <p className="text-lg sm:text-xl lg:text-2xl font-medium text-gray-900 dark:text-white">
                   " I absolutely love how this platform lets me manually search
                   for recipes by cuisine or specific dishes. It's like having an
-                  entire cookbook and chef's advice rolled into one. The search
-                  suggestions are always spot-on, making it effortless to find
-                  recipes that match my taste or mood. A must-have tool for food
-                  enthusiasts like me!"
+                  entire cookbook and chef's advice rolled into one.
                 </p>
               </blockquote>
               <figcaption className="flex items-center justify-center mt-6 space-x-3">
@@ -117,9 +113,7 @@ const Testimonial = () => {
                   "The meal planner feature has been an absolute lifesaver for
                   my busy schedule. I can plan my meals for the week in advance
                   and save so much time and stress. Plus, it helps me stick to a
-                  budget and reduce food waste. It's like having a personal
-                  assistant for meal prep—perfect for any parent juggling a
-                  hectic lifestyle!"
+                  budget and reduce food waste.
                 </p>
               </blockquote>
               <figcaption className="flex items-center justify-center mt-6 space-x-3">
@@ -161,8 +155,7 @@ const Testimonial = () => {
                   "The ability to save my favorite recipes and access them
                   anytime is unmatched in convenience. Whether I'm cooking at
                   home or planning meals for a special occasion, everything I
-                  need is just a click away. This app has truly elevated my
-                  cooking game and made meal preparation a breeze!"
+                  need is just a click away.
                 </p>
               </blockquote>
               <figcaption className="flex items-center justify-center mt-6 space-x-3">

@@ -148,33 +148,62 @@ export default function Banner() {
         {/* Mobile Menu Dropdown */}
         {isMenuOpen && (
           <div className="lg:hidden absolute top-16 right-0 w-full pb-4 bg-base-100 shadow-lg">
-            <div className="px-5 py-3 space-y-4">
+            <div className=" px-5 py-6 space-y-4">
               <Link
                 to={'search'}
                 className="text-white hover:bg-gray-700 px-3 py-2 rounded-md"
               >
                 Recipe Generator
               </Link>
+
+              <div>
+                {' '}
+                <Link
+                  to={'/generate-recipe'}
+                  className="text-white hover:bg-gray-700 px-3 py-2 rounded-md"
+                >
+                  Ai Recipe
+                </Link>
+              </div>
+              <div>
+                {' '}
+                <Link
+                  to={'/planner'}
+                  className="text-white hover:bg-gray-700 px-3 py-2 rounded-md"
+                >
+                  Planner
+                </Link>
+              </div>
+              <div>
+                <Link
+                  to={'/cookbook'}
+                  className="text-white hover:bg-gray-700 px-3 py-2 rounded-md"
+                >
+                  Cook Book
+                </Link>
+              </div>
               <div
                 onClick={() => scrollToSection('pricing')}
-                className="text-white hover:bg-gray-700 px-3 py-2 rounded-md"
+                className="text-white hover:bg-gray-700 px-3  rounded-md"
               >
                 Pricing
               </div>
               <div
                 onClick={() => scrollToSection('faq')}
-                className="text-white hover:bg-gray-700 px-3 py-2 rounded-md "
+                className="text-white hover:bg-gray-700 px-3 rounded-md "
               >
                 FAQ
               </div>
 
               {user ? (
-                <button
-                  onClick={handleLogout}
-                  className="text-lg border text-white hover:bg-gray-700 px-3 py-2 rounded-md"
-                >
-                  Log out
-                </button>
+                <div className="pt-10">
+                  <button
+                    onClick={handleLogout}
+                    className="text-lg border text-white hover:bg-gray-700 px-3 py-2 rounded-md"
+                  >
+                    Log out
+                  </button>
+                </div>
               ) : (
                 <>
                   <button
@@ -190,7 +219,7 @@ export default function Banner() {
         )}
       </nav>
       {/* Hero Section */}
-      <div className="hero bg-base-200 min-h-screen mt-32 lg:mt-10">
+      <div className="hero bg-base-200 min-h-screen mt-12 lg:mt-10">
         {/* Login Modal */}
         {isLoginModalOpen && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-center items-center">

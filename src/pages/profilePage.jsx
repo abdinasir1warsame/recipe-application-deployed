@@ -90,9 +90,9 @@ const ProfileSection = () => {
             <h2 className="text-xl font-semibold mb-2">Meal Planner</h2>
             <div
               className="radial-progress text-primary"
-              style={{ '--value': 75 }}
+              style={{ '--value': (totalPlanner / 60) * 100 }}
             >
-              {totalPlanner}/21
+              {totalPlanner}/60
             </div>
             <p className="mt-2 text-gray-300">Meals Planned</p>
           </div>
@@ -102,7 +102,7 @@ const ProfileSection = () => {
             <h2 className="text-xl font-semibold mb-2">Shopping List</h2>
             <div
               className="radial-progress text-primary"
-              style={{ '--value': 40 }}
+              style={{ '--value': (totalIngredients / 20) * 100 }}
             >
               {totalIngredients}/20
             </div>
@@ -114,7 +114,7 @@ const ProfileSection = () => {
             <h2 className="text-xl font-semibold mb-2">AI Generated Recipes</h2>
             <div
               className="radial-progress text-primary"
-              style={{ '--value': 90 }}
+              style={{ '--value': (totalAiGenerated / 10) * 100 }}
             >
               {totalAiGenerated}/10
             </div>
@@ -202,8 +202,8 @@ const ProfileSection = () => {
         </div>
 
         {/* Call to Action */}
-        <div className="mt-8 text-center">
-          <button className="btn btn-outline btn-lg gap-3 text-lg">
+        <div className="flex justify-center  mt-8 text-center">
+          <button className="btn btn-outline lg:btn-lg gap-3 lg:text-lg">
             <span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -222,7 +222,7 @@ const ProfileSection = () => {
             </span>
             Add New Recipe
           </button>
-          <button className="btn btn-outline btn-lg ml-4 gap-3 text-lg">
+          <button className="btn btn-outline lg:btn-lg ml-4 gap-3 lg:text-lg">
             <span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

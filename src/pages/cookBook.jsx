@@ -81,12 +81,12 @@ export default function CookBook() {
     <div className="flex-1 space-y-10 bg-base-200 text-gray-300  px-2 lg:px-28 py-16 lg:py-8  ml-0 lg:ml-64 min-h-screen">
       <div className="lg:flex lg:flex-row lg:justify-between flex flex-col gap-5 lg:gap-0">
         <p className="text-4xl px-6">Cook Book</p>
-        <div className=" w-full lg:w-auto flex px-6 gap-4 pb-4 ">
+        <div className=" w-full lg:w-auto flex px-6 gap-4 lg:pb-4 ">
           <button
             className={
               !showAiRecipes
-                ? 'btn btn-outline text-xl shadow shadow-black'
-                : 'text-xl shadow-xl rounded-lg px-5'
+                ? 'btn btn-outline lg:text-xl shadow shadow-black'
+                : 'lg:text-xl shadow-xl rounded-lg px-5'
             }
             onClick={handleShowFavourites}
           >
@@ -95,8 +95,8 @@ export default function CookBook() {
           <button
             className={
               showAiRecipes
-                ? 'btn btn-outline text-xl shadow shadow-black'
-                : 'text-xl shadow-xl rounded-lg px-5'
+                ? 'btn btn-outline lg:text-xl shadow shadow-black'
+                : 'lg:text-xl shadow-xl rounded-lg px-5'
             }
             onClick={handleShowAiRecipes}
           >
@@ -104,7 +104,7 @@ export default function CookBook() {
           </button>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-5 px-8 md:px-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 3xl:grid-cols-4 gap-5 px-8 md:px-4">
         {/* Conditionally render based on the button selection */}
         {showAiRecipes ? (
           <AiRecipes aiRecipes={aiRecipes} />

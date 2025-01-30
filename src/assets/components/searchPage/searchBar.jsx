@@ -36,19 +36,22 @@ export default function SearchBar({
   return (
     <div className="space-y-6">
       {/* Search Input */}
-      <div className="flex items-center w-full md:w-auto gap-2 pb-2">
-        <input
-          type="text"
-          value={searchParam}
-          onChange={(e) => setSearchParam(e.target.value)}
-          placeholder="Search by title, ingredients, or content..."
-          className="input input-bordered w-full md:w-80"
-        />
-        <button onClick={handleSearch} className="btn btn-ghost btn-square">
-          {searchIcon}
-        </button>
+      <div className="flex flex-col md:flex-row md:items-center w-full md:w-auto gap-5 lg:gap-2 pb-2">
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={searchParam}
+            onChange={(e) => setSearchParam(e.target.value)}
+            placeholder="Search by title, ingredients, or content..."
+            className="input input-bordered w-full md:w-80"
+          />
+          <button onClick={handleSearch} className="btn btn-ghost btn-square">
+            {searchIcon}
+          </button>
+        </div>
+
         <button
-          className="btn btn-outline btn-sm px-2 flex gap-3"
+          className="btn btn-outline btn-sm px-2 flex gap-3 md:w-auto w-1/2"
           onClick={toggleFilters}
         >
           {filterIcon}

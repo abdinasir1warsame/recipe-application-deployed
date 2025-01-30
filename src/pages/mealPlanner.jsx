@@ -124,7 +124,7 @@ export default function MealPlanner() {
         <div className="flex gap-4 pb-4">
           <button
             onClick={() => setViewMode('next7Days')}
-            className={`btn text-xl ${
+            className={`btn lg:text-xl ${
               viewMode === 'next7Days' ? 'btn btn-outline ' : 'shadow shadow-xl'
             }`}
           >
@@ -132,7 +132,7 @@ export default function MealPlanner() {
           </button>
           <button
             onClick={() => setViewMode('previousPlanned')}
-            className={`btn text-xl ${
+            className={`btn lg:text-xl ${
               viewMode === 'previousPlanned'
                 ? 'btn btn-outline'
                 : 'shadow shadow-xl'
@@ -155,7 +155,7 @@ export default function MealPlanner() {
                 <div className="flex gap-4 ">
                   <span className="block text-2xl font-bold">{date}</span>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7 mb-5">
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-7 mb-5">
                   {groupedPlanner[date]?.length > 0 ? (
                     groupedPlanner[date]
                       .sort(

@@ -60,7 +60,7 @@ export default function PopularRecipes() {
   return (
     <div className="space-y-6">
       <h1 className="text-3xl">Most Popular Recipes</h1>
-      <div className="grid grid-cols-3 sm-grid-cols-4 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-8 ">
+      <div className="grid grid-cols-3 sm-grid-cols-4 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-12 ">
         {displayedRecipes.map((recipe) => (
           <div
             key={recipe.id}
