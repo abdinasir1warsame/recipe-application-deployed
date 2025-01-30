@@ -55,6 +55,14 @@ export default function Banner() {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true); // Mark component as mounted
+    if (location.state?.openLoginModal) {
+      setIsLoginModalOpen(true);
+    }
+  }, [location.state]);
   return (
     <>
       <nav className="fixed navbar bg-base-100 z-50 px-5 lg:px-10 xl:px-20 flex justify-between text-lg font-bold">

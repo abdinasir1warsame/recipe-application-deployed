@@ -14,6 +14,7 @@ const authContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // ✅ Add loading state
 
   // Google Sign-In
   const googleSignin = async () => {
@@ -36,14 +37,11 @@ export const AuthContextProvider = ({ children }) => {
         email,
         password
       );
-      // After user is created, update the profile with displayName (fullName)
-      await updateProfile(userCredential.user, {
-        displayName: fullName,
-      });
+      await updateProfile(userCredential.user, { displayName: fullName });
       setUser(userCredential.user);
     } catch (error) {
       console.error('Registration Error:', error.message);
-      throw error; // To handle errors in components
+      throw error;
     }
   };
 
@@ -58,7 +56,7 @@ export const AuthContextProvider = ({ children }) => {
       setUser(userCredential.user);
     } catch (error) {
       console.error('Login Error:', error.message);
-      throw error; // To handle errors in components
+      throw error;
     }
   };
 
@@ -76,14 +74,23 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      setLoading(false); // ✅ Set loading to false when Firebase resolves user state
       console.log('User', currentUser);
     });
+
     return () => unsubscribe();
   }, []);
 
   return (
     <authContext.Provider
-      value={{ googleSignin, registerWithEmail, loginWithEmail, logOut, user }}
+      value={{
+        googleSignin,
+        registerWithEmail,
+        loginWithEmail,
+        logOut,
+        user,
+        loading,
+      }}
     >
       {children}
     </authContext.Provider>
