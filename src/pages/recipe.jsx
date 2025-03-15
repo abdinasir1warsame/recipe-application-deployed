@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { query, where, getDocs, collection, addDoc } from 'firebase/firestore';
 import { database } from '../assets/googleSignin/config'; // Adjust the path as necessary
 import { userAuth } from '../context/AuthContext';
-import Fraction from 'fraction.js';
 import TopSection from '../assets/components/recipePage/topSection';
 import RecipeDetails from '../assets/components/recipePage/recipeDetails';
 import Ingredients from '../assets/components/recipePage/ingredients';
@@ -17,7 +15,8 @@ export default function NewRecipePage() {
   const [successMessage, setSuccessMessage] = useState('');
 
   const [selectedIngredients, setSelectedIngredients] = useState([]);
-  const [currentServings, setCurrentServings] = useState(1);
+  const [originalServings, setOriginalServings] = useState(null);
+  const [currentServings, setCurrentServings] = useState(null);
 
   useEffect(() => {
     const apiKey3 = import.meta.env.VITE_SPOONACULAR_API_KEY;
@@ -31,7 +30,8 @@ export default function NewRecipePage() {
         }
         const data = await response.json();
         setRecipeData(data);
-        setCurrentServings(data.servings); // Initialize servings from API
+        setOriginalServings(data.servings); // Store original servings
+        setCurrentServings(data.servings); // Initialize current servings
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -49,10 +49,11 @@ export default function NewRecipePage() {
 
   const handleIngredientCheck = (ingredient) => {
     setSelectedIngredients((prevSelected) => {
-      if (prevSelected.includes(ingredient)) {
-        return prevSelected.filter((item) => item !== ingredient); // Remove ingredient if already selected
+      const ingredientId = ingredient.id || ingredient.name; // Use `id` or `name`
+      if (prevSelected.some((item) => item.id === ingredientId)) {
+        return prevSelected.filter((item) => item.id !== ingredientId);
       } else {
-        return [...prevSelected, ingredient]; // Add ingredient if not selected
+        return [...prevSelected, ingredient];
       }
     });
   };
@@ -60,18 +61,27 @@ export default function NewRecipePage() {
   const changeServings = (increment) => {
     setCurrentServings((prev) => {
       const newServings = prev + increment;
-      if (newServings >= 1 && newServings <= 10) {
+      if (newServings >= 1 && newServings <= 100) {
         return newServings;
       }
       return prev;
     });
   };
 
+  const scaleFactor =
+    originalServings && currentServings
+      ? currentServings / originalServings
+      : 1;
+
+  const scaledIngredients = ingredients.map((ingredient) => ({
+    ...ingredient,
+    amount: ingredient.amount * scaleFactor, // Scale the amount correctly
+  }));
+
   return (
     <div className="flex">
       {/* Main Content */}
-
-      <div className="flex-1 bg-base-200 text-gray-300  px-2  lg:px-32 ml-0 lg:ml-64">
+      <div className="flex-1 bg-base-200 text-gray-300 px-2 lg:px-32 ml-0 lg:ml-64">
         <TopSection
           user={user}
           recipe={recipe}
@@ -79,7 +89,7 @@ export default function NewRecipePage() {
           database={database}
         />
 
-        {/* middle section */}
+        {/* Middle section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-2 lg:p-8 py-10">
           <RecipeDetails
             recipeData={recipeData}
@@ -90,21 +100,19 @@ export default function NewRecipePage() {
           {/* Ingredients & Steps */}
           <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4 py-8">
             <Ingredients
-              ingredients={recipeData?.extendedIngredients || []}
+              ingredients={scaledIngredients} // Use scaled ingredients here
               currentServings={currentServings}
               setCurrentServings={setCurrentServings}
               selectedIngredients={selectedIngredients}
               setSelectedIngredients={setSelectedIngredients}
-              handleIngredientCheck={handleIngredientCheck} // Pass the function here
+              handleIngredientCheck={handleIngredientCheck}
               user={user}
               database={database}
-              changeServings={changeServings} // Pass this down
+              changeServings={changeServings}
             />
 
             {/* Steps */}
-            <CookingSteps
-              method={recipeData?.analyzedInstructions?.[0]?.steps || []}
-            />
+            <CookingSteps method={method} />
           </div>
         </div>
       </div>

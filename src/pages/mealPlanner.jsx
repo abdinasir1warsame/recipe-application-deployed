@@ -1,12 +1,18 @@
 import { useEffect, useState } from 'react';
-import { onSnapshot, collection, deleteDoc, doc } from 'firebase/firestore';
-import { database } from '../assets/googleSignin/config'; // Adjust the path to your config file
+import {
+  onSnapshot,
+  collection,
+  deleteDoc,
+  doc,
+  query,
+  where,
+} from 'firebase/firestore';
+import { database } from '../assets/googleSignin/config';
 import { userAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import PlannerButton from '../assets/components/mealPlannerPage/mealPlannerPage';
 
 export default function MealPlanner() {
-  const [next7Days, setNext7Days] = useState([]);
   const [planner, setPlanner] = useState([]);
   const [groupedPlanner, setGroupedPlanner] = useState({});
   const [viewMode, setViewMode] = useState('next7Days'); // 'next7Days' or 'previousPlanned'
@@ -28,20 +34,22 @@ export default function MealPlanner() {
     return days;
   };
 
-  // Fetch suggested recipes and planner data from Firestore
+  // Fetch meal plans from Firestore filtered by logged-in user
   useEffect(() => {
     if (user) {
-      const unsubscribePlanner = onSnapshot(
+      const q = query(
         collection(database, 'planner'),
-        (querySnapshot) => {
-          const plannerList = [];
-          querySnapshot.forEach((doc) => {
-            plannerList.push({ id: doc.id, ...doc.data() });
-          });
-
-          setPlanner(plannerList);
-        }
+        where('userId', '==', user.uid)
       );
+
+      const unsubscribePlanner = onSnapshot(q, (querySnapshot) => {
+        const plannerList = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        setPlanner(plannerList);
+      });
 
       return () => {
         unsubscribePlanner();
@@ -49,13 +57,15 @@ export default function MealPlanner() {
     }
   }, [user]);
 
-  // Update grouped planner based on the view mode
+  // Group planner data based on view mode
   useEffect(() => {
     const groupByDate = () => {
       const grouped = {};
+      const days = getNext7Days();
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
       if (viewMode === 'next7Days') {
-        const days = getNext7Days();
         days.forEach((day) => {
           grouped[day] = [];
         });
@@ -68,8 +78,6 @@ export default function MealPlanner() {
       } else if (viewMode === 'previousPlanned') {
         planner.forEach((plan) => {
           const planDate = new Date(plan.date);
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
 
           if (planDate < today) {
             if (!grouped[plan.date]) {
@@ -79,7 +87,7 @@ export default function MealPlanner() {
           }
         });
 
-        // Sort previous dates in ascending order
+        // Sort previous planned meals by date
         const sortedGrouped = {};
         Object.keys(grouped)
           .sort((a, b) => new Date(a) - new Date(b))
@@ -106,8 +114,7 @@ export default function MealPlanner() {
   };
   const handleDeleteMeal = async (plannerId) => {
     try {
-      const plannerDoc = doc(database, 'planner', plannerId);
-      await deleteDoc(plannerDoc);
+      await deleteDoc(doc(database, 'planner', plannerId));
       setPlanner((prevPlanner) =>
         prevPlanner.filter((plan) => plan.id !== plannerId)
       );
@@ -117,15 +124,14 @@ export default function MealPlanner() {
   };
 
   return (
-    <div className="flex-1 space-y-5 bg-base-200 text-base-content px-2 lg:px-10 xl:px-14 2xl:px-28 py-7 md-py-8 ml-0 lg:ml-64 min-h-screen mb-14 mt-9 lg:mt-0 lg:mb-0">
+    <div className="flex-1 space-y-5 bg-base-200 text-base-content px-2 lg:px-10 xl:px-14 2xl:px-28 py-7 md:py-8 ml-0 lg:ml-64 min-h-screen mb-14 mt-9 lg:mt-0 lg:mb-0">
       <div className="lg:flex lg:flex-row lg:justify-between flex flex-col gap-5 lg:gap-0 px-3 lg:px-0">
-        <h1 className="text-4xl font-bold ">Meal planner</h1>
-        {/* View Mode Buttons */}
+        <h1 className="text-4xl font-bold">Meal Planner</h1>
         <div className="flex gap-4 pb-4">
           <button
             onClick={() => setViewMode('next7Days')}
             className={`btn lg:text-xl ${
-              viewMode === 'next7Days' ? 'btn btn-outline ' : 'shadow shadow-xl'
+              viewMode === 'next7Days' ? 'btn btn-outline' : 'shadow shadow-xl'
             }`}
           >
             Next 7 Days
@@ -143,7 +149,6 @@ export default function MealPlanner() {
         </div>
       </div>
 
-      {/* Planner Content */}
       <div className="space-y-4">
         {Object.keys(groupedPlanner).length > 0 ? (
           Object.keys(groupedPlanner).map((date, index) => (
@@ -152,7 +157,7 @@ export default function MealPlanner() {
               className="flex bg-base-100 justify-between items-center border-[1px] border-gray-500 shadow shadow-lg rounded-lg p-4"
             >
               <div>
-                <div className="flex gap-4 ">
+                <div className="flex gap-4">
                   <span className="block text-2xl font-bold">{date}</span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-7 mb-5">

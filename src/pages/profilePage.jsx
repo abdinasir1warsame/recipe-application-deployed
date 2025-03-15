@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   doc,
   getDoc,
@@ -102,9 +103,9 @@ const ProfileSection = () => {
             <h2 className="text-xl font-semibold mb-2">Shopping List</h2>
             <div
               className="radial-progress text-primary"
-              style={{ '--value': (totalIngredients / 20) * 100 }}
+              style={{ '--value': (totalIngredients / 100) * 100 }}
             >
-              {totalIngredients}/20
+              {totalIngredients}/100
             </div>
             <p className="mt-2 text-gray-300">Items in List</p>
           </div>
@@ -222,7 +223,10 @@ const ProfileSection = () => {
             </span>
             Add New Recipe
           </button>
-          <button className="btn btn-outline lg:btn-lg ml-4 gap-3 lg:text-lg">
+          <Link
+            to={'/planner'}
+            className="btn btn-outline lg:btn-lg ml-4 gap-3 lg:text-lg"
+          >
             <span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -240,7 +244,7 @@ const ProfileSection = () => {
               </svg>
             </span>
             View Planner
-          </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { doc, setDoc, collection } from 'firebase/firestore';
 import { database } from '../assets/googleSignin/config'; // Adjust the path as necessary
 import { userAuth } from '../context/AuthContext';
@@ -203,25 +204,35 @@ export default function AiPage() {
       {!isSearchActive && (
         <div className="hero">
           <div className="hero-content text-center">
-            <div className="space-y-2 max-w-md">
-              <button className="btn btn-2xl h-20 w-20 btn-outline border-primary">
-                {Sparkles}
-              </button>
-              <h1 className="text-xl font-bold">AI Powered Recipe Generator</h1>
-              <p className="text-lg pb-2">
-                Let Recipe AI Generate A Suitable Recipe For You.
-              </p>
-              <button
-                className="btn btn-primary shadow-md text-gray-300 text-lg px-5"
-                onClick={() => {
-                  fetchImage();
-                  fetchRecipe();
-                }}
-                disabled={loading}
+            <div className="space-y-2  max-w-md">
+              <div className="space-y-2  max-w-md mb-2">
+                <button className="btn btn-2xl h-20 w-20 btn-outline border-primary">
+                  {Sparkles}
+                </button>
+                <h1 className="text-xl font-bold">
+                  AI Powered Recipe Generator
+                </h1>
+                <p className="text-lg pb-2">
+                  Let Recipe AI Generate A Suitable Recipe For You.
+                </p>
+                <button
+                  className="btn btn-primary shadow-md text-gray-300 text-lg px-5"
+                  onClick={() => {
+                    fetchImage();
+                    fetchRecipe();
+                  }}
+                  disabled={loading}
+                >
+                  {loading ? 'Generating...' : 'Generate Recipe With AI'}
+                </button>
+              </div>
+
+              <Link
+                to={'/search'}
+                className="text-lg py-2 px-3 btn btn-outline text-center"
               >
-                {loading ? 'Generating...' : 'Generate Recipe With AI'}
-              </button>
-              <h1 className="text-lg pt-2">Discover Recipes</h1>
+                Discover Recipes
+              </Link>
             </div>
           </div>
         </div>

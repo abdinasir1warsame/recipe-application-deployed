@@ -183,7 +183,8 @@ export default function Features() {
                   <span className="text-2xl sm:text-3xl lg:text-4xl  2xl:text-5xl text-gray-300">
                     {tier.price}
                   </span>
-                  {plan !== 'onetime' && ' /month'}
+                  {plan === 'monthly' && ' /month'}{' '}
+                  {plan === 'annually' && ' /year'}
                 </p>
                 <div className="border-b-[1px] "></div>
                 {tier.features.map((feature, idx) => (

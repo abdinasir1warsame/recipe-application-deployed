@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react';
-import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
-import { database } from '../assets/googleSignin/config'; // Assuming you have a firebaseConfig file
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  doc,
+  query,
+  where,
+} from 'firebase/firestore';
+import { database } from '../assets/googleSignin/config'; // Adjust path as necessary
 import { userAuth } from '../context/AuthContext';
 
 export default function ShoppingListPage() {
@@ -8,17 +15,24 @@ export default function ShoppingListPage() {
   const { user } = userAuth();
 
   useEffect(() => {
-    // Fetch the ingredients from Firestore
+    // Fetch the ingredients from Firestore for the logged-in user
     const fetchIngredients = async () => {
       if (user) {
-        const querySnapshot = await getDocs(
-          collection(database, 'ingredients')
-        );
-        const ingredientsList = [];
-        querySnapshot.forEach((doc) => {
-          ingredientsList.push({ id: doc.id, ...doc.data() });
-        });
-        setIngredients(ingredientsList);
+        try {
+          const q = query(
+            collection(database, 'ingredients'),
+            where('userId', '==', user.uid)
+          );
+          const querySnapshot = await getDocs(q);
+          const ingredientsList = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          console.log('Fetched Ingredients:', ingredientsList);
+          setIngredients(ingredientsList);
+        } catch (error) {
+          console.error('Error fetching ingredients:', error);
+        }
       }
     };
 
@@ -28,8 +42,8 @@ export default function ShoppingListPage() {
   const deleteIngredient = async (ingredientId) => {
     try {
       await deleteDoc(doc(database, 'ingredients', ingredientId));
-      setIngredients(
-        ingredients.filter((ingredient) => ingredient.id !== ingredientId)
+      setIngredients((prevIngredients) =>
+        prevIngredients.filter((ingredient) => ingredient.id !== ingredientId)
       );
       console.log('Ingredient removed from Firestore');
     } catch (error) {
@@ -38,30 +52,35 @@ export default function ShoppingListPage() {
   };
 
   return (
-    <div className="flex-1 space-y-5 bg-base-200 text-gray-300 px-2 lg:px-10 xl:px-14 2xl:px-28 py-4 md-py-8 ml-0 lg:ml-64 min-h-screen mb-14 mt-7 lg:mt-0 lg:mb-0">
+    <div className="flex-1 space-y-5 bg-base-200 text-gray-300 px-2 lg:px-10 xl:px-14 2xl:px-28 py-4 md:py-8 ml-0 lg:ml-64 min-h-screen mb-14 mt-7 lg:mt-0 lg:mb-0">
       <div className="p-5 space-y-16">
         <div>
-          <p className="text-2xl text-gray-600">{user.displayName}'s</p>
-          <h1 className="text-4xl font-bold ">Shopping List</h1>
+          <p className="text-2xl text-gray-600">`{user.displayName}`</p>
+          <h1 className="text-4xl font-bold">Shopping List</h1>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4    gap-16 lg:px-5">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-16 lg:px-5">
           {ingredients.length > 0 ? (
             ingredients.map((ingredient) => {
-              const imageUrl = `https://img.spoonacular.com/ingredients_100x100/${ingredient.image
-                .toLowerCase()
-                .replace(' ', '-')}`;
+              const imageUrl = ingredient.image
+                ? `https://img.spoonacular.com/ingredients_100x100/${ingredient.image
+                    .toLowerCase()
+                    .replace(/\s/g, '-')}`
+                : 'https://via.placeholder.com/100';
 
               return (
                 <div key={ingredient.id} className="">
                   <div className="flex h-full flex-col justify-center items-center bg-white shadow-md h-48 rounded-lg text-center border-4 border-gray-600">
-                    <img src={imageUrl} alt={ingredient.name} className="" />
-                    <p className="text-xl text-base-300 font-extrabold  ">
-                      {ingredient.name}
+                    <img
+                      src={imageUrl}
+                      alt={ingredient.name || 'Unknown Ingredient'}
+                    />
+                    <p className="text-xl text-base-300 font-extrabold">
+                      {ingredient.name || 'Unknown Ingredient'}
                     </p>
                   </div>
                   <div className="flex justify-center py-3">
                     <button
-                      className="btn btn-sm btn-outline hover:bg-red-700 hover:text-white "
+                      className="btn btn-sm btn-outline hover:bg-red-700 hover:text-white"
                       onClick={() => deleteIngredient(ingredient.id)}
                     >
                       Remove

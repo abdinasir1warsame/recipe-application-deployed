@@ -33,6 +33,13 @@ export default function SearchBar({
     });
   };
 
+  // Handle 'Enter' key press for search
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch(); // Trigger search when Enter key is pressed
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Search Input */}
@@ -42,6 +49,7 @@ export default function SearchBar({
             type="text"
             value={searchParam}
             onChange={(e) => setSearchParam(e.target.value)}
+            onKeyDown={handleKeyPress} // Trigger search on Enter key press
             placeholder="Search by title, ingredients, or content..."
             className="input input-bordered w-full md:w-80"
           />
